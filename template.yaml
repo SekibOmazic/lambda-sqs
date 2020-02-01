@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Example of processing messages on an SQS fifo queue with Lambda
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  ApiGW:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+
+  SQSProducerFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      CodeUri: ./sqs-producer
+      Environment:
+        Variables:
+          QUEUE_NAME: !Ref TestSqsQueue
+          REGION: "eu-central-1"
+      Policies:
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt TestSqsQueue.QueueName
+      Events:
+        HttpGet:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGW
+            Path: /produce-messages
+            Method: GET
+
+  SQSConsumerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: sqs-consumer/
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt TestSqsQueue.Arn
+            BatchSize: 5
+
+  TestSqsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      ContentBasedDeduplication: true
+      QueueName: TestQueue.fifo
+      FifoQueue: true
+
+Outputs:
+  Region:
+    Description: "Region"
+    Value: !Ref AWS::Region
+
+  ApiId:
+    Description: "API ID"
+    Value: !Ref ApiGW
+
+  ApiUrl:
+    Description: "API endpoint URL for Dev environment"
+    Value: !Sub "https://${ApiGW}.execute-api.${AWS::Region}.amazonaws.com/dev/"

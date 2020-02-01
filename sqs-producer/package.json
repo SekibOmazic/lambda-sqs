@@ -1,0 +1,14 @@
+{
+  "name": "sqs_producer",
+  "version": "1.0.0",
+  "description": "Produce SQS messages",
+  "main": "app.js",
+  "repository": "https://github.com/SekibOmazic/lambda-sqs",
+  "author": "Sekib Omazic",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.610.0",
+    "uuid": "^3.4.0"
+  },
+  "scripts": {}
+}

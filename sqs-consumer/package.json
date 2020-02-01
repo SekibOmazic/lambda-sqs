@@ -1,0 +1,10 @@
+{
+  "name": "sqs_consumer",
+  "version": "1.0.0",
+  "description": "Consume SQS messages",
+  "main": "app.js",
+  "repository": "https://github.com/SekibOmazic/lambda-sqs",
+  "author": "Sekib Omazic",
+  "license": "MIT",
+  "scripts": {}
+}
