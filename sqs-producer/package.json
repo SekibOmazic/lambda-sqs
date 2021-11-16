@@ -7,7 +7,7 @@
   "author": "Sekib Omazic",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.610.0",
+    "aws-sdk": "^2.814.0",
     "uuid": "^3.4.0"
   },
   "scripts": {}
